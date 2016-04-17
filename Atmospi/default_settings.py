@@ -1,8 +1,13 @@
 # Atmospi settings.
+import os.path
+import sys
+
+atmospi_dir = os.path.split(__file__)[0]
+
 settings = {
 
     # Absolute path to the SQLite database file.
-    'db': '/home/pi/atmospi/log.db',
+    'db': os.path.normpath(os.path.join(atmospi_dir, '..', 'log.db')),
 
     # How far into the past should data be loaded (in seconds)?
     # Default to 1 week.
@@ -12,5 +17,7 @@ settings = {
     'precision': 2,
 
     # Temperature unit of measure (C or F).
-    't_unit': 'F',
+    't_unit': 'C',
 }
+
+print >>sys.stderr, "DB PATH: {}".format(settings['db'])
