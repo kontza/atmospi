@@ -36,7 +36,7 @@ Manual Setup
     sudo apt-get update
     sudo apt-get upgrade
 
-3) Install SQLite3 and Apache2 with the WSGI moduile.
+3) Install SQLite3 and Apache2 with the WSGI module.
 
     sudo apt-get install sqlite3 apache2 libapache2-mod-wsgi
 
@@ -51,7 +51,7 @@ Manual Setup
 
 6) Create a SQLite database called log.db in the atmospi directory.
 
-    sqlite3 log.db
+    $ sqlite3 log.db << EOF
     CREATE TABLE Devices(DeviceID INTEGER PRIMARY KEY, Type TEXT, SerialID TEXT, Label TEXT);
     CREATE TABLE Temperature(DeviceID INT, Timestamp INT, C REAL, F REAL);
     CREATE TABLE Humidity(DeviceID INT, Timestamp INT, H REAL);
@@ -59,12 +59,13 @@ Manual Setup
     CREATE INDEX temperature_dt ON Temperature(DeviceID, Timestamp);
     CREATE INDEX humidity_dt ON Humidity(DeviceID, Timestamp);
     CREATE INDEX flag_dt ON Flag(DeviceID, Timestamp);
-    .exit
+    EOF
 
 7) Add the Apache virtual host (provided) and restart Apache.
 
-    sudo ln -s /home/pi/atmospi/atmospi.vhost /etc/apache2/sites-enabled/000-atmospi.conf
-    sudo apache2ctl restart
+    $ source init-vhost.sh
+    $ sudo ln -sf $PWD/000-atmospi.conf /etc/apache2/sites-enabled/
+    $ sudo apache2ctl restart
 
 DS18B20 Temperature Sensor Setup
 --------------------------------
@@ -74,6 +75,13 @@ Refer to Adafruit's tutorial for connecting the DS18B20 sensors: http://learn.ad
 Note that you can connect as many DS18B20 sensors to your Pi as you'd like. Atmospi will automatically detect them and log their measurements.
 
 If you use the Puppet script to install, a cron job is already set up to take measurements. If you are setting up manually, do the following:
+
+0) To use OWFS-based temperature reading:
+
+    $ sudo apt-get install owfs owfs-fuse
+    $ modprobe -r ds9490r
+    $ modprobe -r ds2490
+    4 modprobe -r wire
 
 1) Set up measure-ds18b20.py to run on a cron job as root.
 
@@ -117,4 +125,3 @@ Also note that you can connect as many DHT sensors to your Pi as you'd like, but
 
     sudo crontab -e
     */5 * * * * /home/pi/atmospi/Atmospi/measure-dht.py >/dev/null 2>&1
-
