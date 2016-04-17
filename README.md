@@ -80,6 +80,11 @@ If you use the Puppet script to install, a cron job is already set up to take me
     sudo crontab -e
     */5 * * * * /home/pi/atmospi/Atmospi/measure-ds18b20.py >/dev/null 2>&1
 
+2) Alternatively (using OWFS):
+
+    sudo crontab -e
+    */5 * * * * /home/pi/atmospi/Atmospi/measure-ds18b20-from-owfs.py
+
 OPTIONAL) Sensors will be automatically labeled with their serial ID. If you would like to change this label, run the following query for each sensor:
 
     UPDATE Devices SET Label = "New label" WHERE Type = 'ds18b20' AND SerialID = '28-000000000001';
