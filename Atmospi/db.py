@@ -10,8 +10,10 @@ except ImportError:
     from default_settings import settings
 
 # Database select query helper.
-def select(query, args=()):
 
+
+def select(query, args=()):
+    con = None
     # Try connecting and executing the query.
     try:
 
@@ -32,7 +34,7 @@ def select(query, args=()):
     except lite.Error, e:
         if con:
             con.rollback()
-        return 'Error selecting from the database file. ' + e
+        return 'Error selecting from the database file. {}'.format(e)
 
     # At the end, close the database connection.
     finally:
