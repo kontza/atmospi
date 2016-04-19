@@ -8,7 +8,7 @@ cat << EOF > 000-atmospi.conf
     ServerName atmospi
     ServerAlias atmospi1 atmospi2 atmospi3 atmospi4 atmospi5 atmospi6 atmospi7 atmospi8 atmospi9 atmospi10
 
-    WSGIDaemonProcess atmospi user=torpparit group=torpparit threads=5
+    WSGIDaemonProcess atmospi user=$USER group=$USER threads=5
     WSGIScriptAlias / $__WSGI_PATH
 
     <Directory $__ATMOSPI_DIR>
