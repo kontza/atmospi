@@ -1,13 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import time
-import json
-import db
 import data
+import db
+import json
+import logging
+import time
 from flask import Flask
 from flask import request
 from flask import render_template
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 # Import settings.
 try:
@@ -45,6 +49,8 @@ def devices_temperature():
         devices[row[0]] = row[1]
 
     # Return as a string.
+    logger.info("/data/devices/temperature: {}".format(json.dumps(devices)))
+    # {"1": "28-000003ea01f5"}
     return json.dumps(devices)
 
 # Define the humidity devices router item.
@@ -80,6 +86,8 @@ def device_data(device_id, device_type):
 
     # Query the data and return it as JSON.
     results = data.query(device_id, device_type, range_min, range_max)
+    logger.info("/data/device/{}/{}: {}".format(device_id, device_type, json.dumps(results[:10])))
+    #  /data/device/1/temperature: [[1460737810000, 21.19], [1460738101000, 21.5], ...
     return json.dumps(results)
 
 # Define the latest temperature data router item.
@@ -107,6 +115,8 @@ def latest_temperature():
             data[label] = [timestamp, temperature]
 
     # Return as a string.
+    logger.info("/data/latest/temperature: {}".format(json.dumps(data)))
+    # /data/latest/temperature: {"28-000003ea01f5": [1461046802000, 4.38]}
     return json.dumps(data)
 
 # Define the latest humidity data router item.
